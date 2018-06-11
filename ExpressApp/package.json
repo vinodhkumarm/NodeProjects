@@ -1,0 +1,22 @@
+{
+  "name": "expressapp",
+  "version": "1.0.0",
+  "description": "This is first express js server app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinodhkumarm/NodeProjects.git"
+  },
+  "author": "vinodhkumarm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vinodhkumarm/NodeProjects/issues"
+  },
+  "homepage": "https://github.com/vinodhkumarm/NodeProjects#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

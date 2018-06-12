@@ -1,10 +1,12 @@
 const Joi = require('joi');
 
+// Catalog of available validation schemas
 const AvailableSchemas = {
     Course: 'course',
     ID: 'id'
 };
 
+// Schemas
 const courseSchema = {
     name: Joi.string().min(3).required(),
     author: Joi.string().min(2).required().optional(),
@@ -15,6 +17,7 @@ const idSchema = {
     id: Joi.number().min(2).required().positive().integer(),
 };
 
+// Utility function
 const fetchValidationSchema = (scheme) => {
     if (scheme === 'course') {
         return courseSchema;
@@ -26,6 +29,7 @@ const fetchValidationSchema = (scheme) => {
     return false;
 };
 
+// Generic Validation method
 const validate = (reqBody, res, schemaName) => {
     var schema = fetchValidationSchema(schemaName);
 
@@ -46,4 +50,4 @@ const validate = (reqBody, res, schemaName) => {
 };
 
 module.exports.validate = validate;
-module.exports.Available_Schemas = AvailableSchemas;
+module.exports.AVAILABLE_SCHEMAS = AvailableSchemas;

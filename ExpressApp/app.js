@@ -12,7 +12,7 @@ const Validator = require('./data/validations');
 appServer.use(express.json());
 
 
-// GET API methods
+//// GET API methods
 appServer.get('/', (req, res) => {
     res.send("Hello World");
 });
@@ -45,10 +45,10 @@ appServer.get("/api/courses/:name", (req, res) => {
 //// POST API methods
 appServer.post('/api/courses', (req, res) => {
 
-    if (Validator.validate(req.body, res, Validator.Available_Schemas.Course)) {
+    if (Validator.validate(req.body, res, Validator.AVAILABLE_SCHEMAS.Course)) {
 
         let course = {
-            id: courses.length + 1,
+            id: courses.length + 11,
             //name: req.params.name,
             // author: req.params.author,
             // published: req.params.published
@@ -67,7 +67,6 @@ appServer.post('/api/courses', (req, res) => {
 
 
 //// PUT API method
-
 const updateCourseDetail = (oldCourseDetail, updatedCourseDetail) => {
     return (_.isUndefined(updatedCourseDetail) || _.isEmpty(updatedCourseDetail)) ?
         oldCourseDetail :

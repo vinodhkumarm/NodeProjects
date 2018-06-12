@@ -1,15 +1,36 @@
 const Joi = require('joi');
 
+const AvailableSchemas = {
+    Course: 'course',
+    ID: 'id'
+};
+
 const courseSchema = {
     name: Joi.string().min(3).required(),
-    author: Joi.string().min(2).required(),
+    author: Joi.string().min(2).required().optional(),
     published: Joi.number().optional()
 };
 
-const validate = (reqBody, res, schemaName) => {
+const idSchema = {
+    id: Joi.number().min(2).required().positive().integer(),
+};
 
-    if (schemaName === 'course') {
-        var validationResult = Joi.validate(reqBody, courseSchema);
+const fetchValidationSchema = (scheme) => {
+    if (scheme === 'course') {
+        return courseSchema;
+    }
+    if (scheme === 'id') {
+        return idSchema;
+    }
+
+    return false;
+};
+
+const validate = (reqBody, res, schemaName) => {
+    var schema = fetchValidationSchema(schemaName);
+
+    if (schema) {
+        var validationResult = Joi.validate(reqBody, schema);
 
         if (validationResult.error) {
             //res.status(400).send(validationResult.error);
@@ -18,8 +39,11 @@ const validate = (reqBody, res, schemaName) => {
         } else {
             return true;
         }
+    } else {
+        console.log(`No validation schema with name ${schemaName} found`);
+        return true;
     }
 };
 
-module.exports.courseSchema = courseSchema;
 module.exports.validate = validate;
+module.exports.Available_Schemas = AvailableSchemas;

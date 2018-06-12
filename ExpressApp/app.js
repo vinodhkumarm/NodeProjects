@@ -2,11 +2,11 @@
 /* jshint esversion:6 */
 
 // input validator
+const _ = require('underscore');
 const express = require('express');
 const appServer = express();
 const courses = require('./data/courseCatalog').courses;
 const Validator = require('./data/validations');
-
 
 // body parsing
 appServer.use(express.json());
@@ -44,7 +44,8 @@ appServer.get("/api/courses/:name", (req, res) => {
 
 //// POST API methods
 appServer.post('/api/courses', (req, res) => {
-    if (Validator.validate(req.body, res, 'course')) {
+
+    if (Validator.validate(req.body, res, Validator.Available_Schemas.Course)) {
 
         let course = {
             id: courses.length + 1,
@@ -60,6 +61,34 @@ appServer.post('/api/courses', (req, res) => {
 
         courses.push(course);
         res.send(course);
+    }
+});
+
+
+
+//// PUT API method
+
+const updateCourseDetail = (oldCourseDetail, updatedCourseDetail) => {
+    return (_.isUndefined(updatedCourseDetail) || _.isEmpty(updatedCourseDetail)) ?
+        oldCourseDetail :
+        updatedCourseDetail;
+};
+
+appServer.put('/api/courses/:id', (req, res) => {
+    if (Validator.validate(req.params, res, Validator.Available_Schemas.ID)) {
+        let course = courses.find(c => c.id === parseInt(req.params.id));
+
+        if (!course)
+            res.status(404).send('Requested course with the id not found');
+
+        if (Validator.validate(req.body, res, Validator.Available_Schemas.Course)) {
+            course.author = updateCourseDetail(course.author, req.body.author);
+            course.name = updateCourseDetail(course.name, req.body.name);
+            course.published = updateCourseDetail(course.published, req.body.published);
+
+            console.log(course);
+            res.send(course);
+        }
     }
 });
 

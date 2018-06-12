@@ -1,3 +1,18 @@
 {
-  "esversion": 6
+  "esversion": 6,
+  "predef": [ "$", "process", "require", "jQuery", "text", "$p", "window", "document", "console", "parent" ],
+  "curly":                true,
+  "eqeqeq":               true,
+  "funcscope":            true,
+  "futurehostile":        true,
+  "latedef":              true,
+  "nonbsp":               true,
+  "notypeof":             true,
+  "shadow":               "outer",
+  "singleGroups":         true,
+  "undef":                true,
+  "unused":               true,
+  "debug":                true,
+  "scripturl":            true,
+  "-W079":                true
 }

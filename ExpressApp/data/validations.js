@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const _ = require('underscore');
 
 // Catalog of available validation schemas
 const AvailableSchemas = {
@@ -14,7 +15,7 @@ const courseSchema = {
 };
 
 const idSchema = {
-    id: Joi.number().min(2).required().positive().integer(),
+    id: Joi.number().min(2).required(),
 };
 
 // Utility function
@@ -27,6 +28,17 @@ const fetchValidationSchema = (scheme) => {
     }
 
     return false;
+};
+
+const isNotNullOrEmpty = (val, res) => {
+    var result = (_.isNull(val) || _.isEmpty(val) || _.isUndefined(val));
+
+    if (!result) {
+        res.send('The input parameter cannot be empty');
+        return false;
+    }
+
+    return true;
 };
 
 // Generic Validation method
@@ -50,4 +62,5 @@ const validate = (reqBody, res, schemaName) => {
 };
 
 module.exports.validate = validate;
+module.exports.IsValid = isNotNullOrEmpty;
 module.exports.AVAILABLE_SCHEMAS = AvailableSchemas;

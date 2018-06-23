@@ -12,6 +12,18 @@ const Validator = require('./data/validations');
 appServer.use(express.json());
 
 
+// General utility functions
+const isCourseExist = (req, res) => {
+    let course = courses.find(c => c.id === parseInt(req.params.id));
+
+    if (!id || !course) {
+        res.status(404).send('Requested course with the id not found');
+        return course;
+    }
+
+    return course;
+};
+
 //// GET API methods
 appServer.get('/', (req, res) => {
     res.send("Hello World");
@@ -23,22 +35,21 @@ appServer.get("/api/courses", (req, res) => {
 
 appServer.get("/api/courses/:id", (req, res) => {
     //res.send(req.params.id);
-    let course = courses.find(c => c.id === parseInt(req.params.id));
+    var course = isCourseExist(req, res);
 
-    if (!course)
-        res.status(404).send('Requested course with the id not found');
-
-    res.send(course);
+    if (course) {
+        res.send(course);
+    }
 });
 
-appServer.get("/api/courses/:name", (req, res) => {
-    let course = courses.find(c => c.name.contains(req.param.name));
+// appServer.get("/api/courses/:name", (req, res) => {
+//     let course = courses.find(c => c.name.contains(req.param.name));
 
-    if (!course)
-        res.status(404).send('Requested course with the name not found');
+//     if (!course)
+//         res.status(404).send('Requested course with the name not found');
 
-    res.send(course);
-});
+//     res.send(course);
+// });
 
 
 
@@ -74,18 +85,36 @@ const updateCourseDetail = (oldCourseDetail, updatedCourseDetail) => {
 };
 
 appServer.put('/api/courses/:id', (req, res) => {
-    if (Validator.validate(req.params, res, Validator.Available_Schemas.ID)) {
-        let course = courses.find(c => c.id === parseInt(req.params.id));
 
-        if (!course)
-            res.status(404).send('Requested course with the id not found');
+    if (Validator.IsValid(req.params.id, res) &&
+        Validator.validate(req.params, res, Validator.AVAILABLE_SCHEMAS.ID) &&
+        Validator.validate(req.body, res, Validator.AVAILABLE_SCHEMAS.Course)) {
 
-        if (Validator.validate(req.body, res, Validator.Available_Schemas.Course)) {
+        var course = isCourseExist(req, res);
+
+        if (course) {
             course.author = updateCourseDetail(course.author, req.body.author);
             course.name = updateCourseDetail(course.name, req.body.name);
             course.published = updateCourseDetail(course.published, req.body.published);
 
-            console.log(course);
+            res.send(course);
+        }
+    }
+});
+
+
+//// DELETE API method
+appServer.delete('/api/courses/:id', (req, res) => {
+
+    if (Validator.IsValid(req.params.id, res) ||
+        Validator.validate(req.params, res, Validator.AVAILABLE_SCHEMAS.ID)) {
+
+        var course = isCourseExist(req, res);
+
+        if (course) {
+            let indexOfCourse = courses.indexOf(course);
+            courses.splice(indexOfCourse, 1);
+
             res.send(course);
         }
     }

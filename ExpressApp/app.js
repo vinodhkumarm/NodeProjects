@@ -14,7 +14,8 @@ appServer.use(express.json());
 
 // General utility functions
 const isCourseExist = (req, res) => {
-    let course = courses.find(c => c.id === parseInt(req.params.id));
+    let id = req.params.id;
+    let course = courses.find(c => c.id === parseInt(id));
 
     if (!id || !course) {
         res.status(404).send('Requested course with the id not found');
@@ -79,7 +80,7 @@ appServer.post('/api/courses', (req, res) => {
 
 //// PUT API method
 const updateCourseDetail = (oldCourseDetail, updatedCourseDetail) => {
-    return (_.isUndefined(updatedCourseDetail) || _.isEmpty(updatedCourseDetail)) ?
+    return _.isUndefined(updatedCourseDetail) || _.isEmpty(updatedCourseDetail) ?
         oldCourseDetail :
         updatedCourseDetail;
 };
